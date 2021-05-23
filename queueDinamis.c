@@ -32,7 +32,7 @@ addrNQ Alokasi(infoqueue X){
 	
 	p = (addrNQ)malloc(sizeof(NodeQueue));
 	if(p != nil){
-		p->info = X;
+		Info(p) = X;
 		p->next = nil;
 		return p;
 	}else {
@@ -63,9 +63,16 @@ void CreateQueue(Queue *Q){
    Sebaliknya false
 */
 boolean IsQueueEmpty(Queue Q){
-	if(Front(Q) == nil && Rear(Q) == nil){
+	// if(Front(Q) == nil && Rear(Q) == nil){
+	// 	return true;
+	// } else {
+	// 	return false;
+	// }
+
+	int jmlantri = NBElmt(Q);
+	if(jmlantri == 0){
 		return true;
-	} else {
+	}else{
 		return false;
 	}
 }
@@ -74,7 +81,7 @@ boolean IsQueueEmpty(Queue Q){
 /* I.S. Q mungkin kosong atau Q mungkin berisi antrian */  
 /* F.S. info yang diambil = nilai elemen Front pd I.S. */ 
 /* Front(Q) menunjuk ke next antrian atau diset menjadi NIll, Q mungkin kosong */ 
-void deQueue(Queue *Q, infoqueue *data){
+void deQueue(Queue *Q){
 	addrNQ p, prev;
 	
 	
@@ -85,14 +92,8 @@ void deQueue(Queue *Q, infoqueue *data){
 		p->next = nil;
 	}else{
 		p = Front(*Q);
-		prev = nil;
-		while(p->next != nil){ 
-			prev = p;
-			p = p->next;
-		}// prev apabila di array posisinya berada di index sebelum yang terakhir............ mungkin
-		prev->next = nil;
-		Rear(*Q) = prev;
-		Dealokasi(&p);  // sementara mungkin seperti ini :VVVV
+		Front(*Q) = Front(*Q)->next;
+		Dealokasi(&p);  
 	}
 }
 
@@ -100,14 +101,19 @@ void deQueue(Queue *Q, infoqueue *data){
 /* I.S. Q mungkin kosong atau Q mungkin berisi antrian */ 
 /* F.S. info baru (data) menjadi Rear yang baru dengan node Rear yang lama mengaitkan pointernya ke node yang baru */ 
 void enQueue(Queue *Q, infoqueue data){
-	addrNQ p;
+	addrNQ p, last;
 	
 	p = Alokasi(data);
-	if(!IsQueueEmpty(*Q)){
-		Rear(*Q)->next = p;
+	if(Rear(*Q) == nil){
+		Front(*Q) = Rear(*Q) = p;
 	}else{
-		Front(*Q) = p;
-		p->next = nil;
+		// last = Front(*Q);
+		// while(last->next != nil){
+		// 	Rear(*Q) = last;
+		// 	last = last->next;
+		// }
+		Rear(*Q)->next = p;
+		Rear(*Q) = p;
 	}
 }
 
@@ -117,15 +123,11 @@ void enQueue(Queue *Q, infoqueue data){
 int NBElmt(Queue Q){
 	addrNQ P;
 	int jml = 0;
-	if(IsQueueEmpty(Q)){
-		return 0;
-	}else {
-		P = Front(Q);
-		while (P != nil)
-		{
-			jml++;
-			P = P->next;
-		}
+	P = Front(Q);
+	while (P != nil)
+	{
+		jml++;
+		P = P->next;
 	}
 	return jml;
 }
@@ -138,9 +140,9 @@ void printInfoQueue(Queue Q){
 		printf("Antrian Kosong \n");
 	}else {
 		while(p->next != nil){
-			printf("[ %d ] -", Info(p));
+			printf("[ %d ] - ", Info(p));
 			p = p->next;
 		}
-		printf("[ %d ] -\n", Info(p));
+		printf("[ %d ] - \n", Info(p));
 	}
 }

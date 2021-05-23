@@ -75,7 +75,7 @@ void enQueue(Queue *Q, infoqueue data);
 /* I.S. Q mungkin kosong atau Q mungkin berisi antrian */  
 /* F.S. info yang diambil = nilai elemen Front pd I.S. */ 
 /* Front(Q) menunjuk ke next antrian atau diset menjadi NIll, Q mungkin kosong */ 
-void deQueue(Queue *Q, infoqueue *data);
+void deQueue(Queue *Q);
 
 
 /* Mengirimkan banyaknya elemen queue jika Q berisi atrian atau 
